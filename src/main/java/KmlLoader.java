@@ -11,7 +11,6 @@ import gov.nasa.worldwind.ogc.kml.KMLAbstractFeature;
 import gov.nasa.worldwind.ogc.kml.KMLRoot;
 import gov.nasa.worldwind.ogc.kml.impl.KMLController;
 import gov.nasa.worldwind.util.WWUtil;
-import gov.nasa.worldwindx.applications.worldwindow.features.swinglayermanager.LayerTreeModel;
 import gov.nasa.worldwindx.applications.worldwindow.features.swinglayermanager.LayerTreeNode;
 
 import java.awt.*;
@@ -22,7 +21,7 @@ import java.io.IOException;
 
 public class KmlLoader extends JFrame {
     public WorldWindowGLCanvas windowGLCanvas;
-    private LayerTreeModel layerTreeModel;
+    private MyTreeModel treeModel;
     private JFileChooser fileChooser;
 
     public KmlLoader(){
@@ -36,8 +35,8 @@ public class KmlLoader extends JFrame {
 
     private Component prepareKMLTree() {
         JTree kmlTree = new JTree();
-        layerTreeModel = new LayerTreeModel();
-        kmlTree.setModel(layerTreeModel);
+        treeModel = new MyTreeModel();
+        kmlTree.setModel(treeModel);
 
         JScrollPane scrollPane = new JScrollPane(kmlTree);
         Dimension minimumSize = new Dimension(100, 100);
@@ -127,8 +126,8 @@ public class KmlLoader extends JFrame {
 
         layer.addRenderable(kmlController);
         this.windowGLCanvas.getModel().getLayers().add(layer);
-        layerTreeModel.getRootNode().add(new LayerTreeNode(layer));
-        layerTreeModel.reload();
+        treeModel.getRootNode().add(new LayerTreeNode(layer));
+        treeModel.reload();
     }
 
     private String forName(File kmlFile, KMLRoot kmlRoot) {
@@ -136,8 +135,12 @@ public class KmlLoader extends JFrame {
         KMLAbstractFeature rootFeature = kmlRoot.getFeature();
         if(rootFeature != null && !WWUtil.isEmpty(rootFeature.getName()))
             return rootFeature.getName();
+
         return kmlFile.getName();
+
     }
+
+
 
     public static void main(String[] args) {
         Configuration.setValue(AVKey.INITIAL_LATITUDE, 40);
